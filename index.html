@@ -1,3 +1,4 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>Luke Shales Agency</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -96,7 +97,13 @@
   header.nav.scrolled{border-bottom-color:var(--line);}
   .nav-inner{display:flex; align-items:center; justify-content:space-between; padding-block:18px;}
   .nav-mark{display:flex; flex-direction:column; line-height:1;}
+  .nav-mark-row{display:flex; align-items:center; gap:8px;}
   .nav-mark .name{font-family:var(--font-display); font-size:1.35rem;}
+  .nav-mark-icon{height:26px; width:auto; object-fit:contain;}
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]) .nav-mark-icon{filter:invert(1);}
+  }
+  :root[data-theme="dark"] .nav-mark-icon{filter:invert(1);}
   .nav-mark .tag{font-family:var(--font-mono); font-size:0.6rem; letter-spacing:0.22em; color:var(--ink-3); margin-top:2px;}
   .nav-links{display:flex; align-items:center; gap:36px;}
   .nav-links a{font-size:0.88rem; color:var(--ink-2); position:relative; padding-block:4px;}
@@ -236,6 +243,9 @@
   .price-includes h4{font-family:var(--font-body); font-weight:600; font-size:0.98rem; margin-bottom:4px;}
   .include-row{display:flex; align-items:flex-start; gap:12px; font-size:0.92rem; color:var(--ink-2);}
   .include-row .icon-sm{color:var(--accent); margin-top:3px;}
+  .price-pay-row{display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-top:4px;}
+  .price-pay-row .btn{align-self:flex-start;}
+  #paypal-subscribe-container{margin-top:2px;}
 
   /* ---------- Start / form ---------- */
   .start-wrap{
@@ -291,7 +301,10 @@
 <header class="nav" id="nav">
   <div class="shell nav-inner">
     <a href="#top" class="nav-mark">
-      <span class="name">Luke Shales</span>
+      <span class="nav-mark-row">
+        <span class="name">Luke Shales</span>
+        <img src="nav-mark.png" alt="" class="nav-mark-icon">
+      </span>
       <span class="tag">AGENCY</span>
     </a>
     <nav class="nav-links">
@@ -505,10 +518,14 @@
           <div class="amount">$200 <span class="unit">/ month</span></div>
           <div class="label">Retainer</div>
         </div>
-        <a href="https://paypal.me/lukeshalesagency/1000" target="_blank" rel="noopener" class="btn btn-primary btn-sm" style="align-self:flex-start; margin-top:4px;">
-          Pay setup fee via PayPal
-          <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-        </a>
+        <div id="paypal-setup-container">
+          <div class="label" style="margin-bottom:8px;">Pay the $1,000 setup fee</div>
+          <div id="paypal-container-3CMXVKJ2STEWW"></div>
+        </div>
+        <div id="paypal-subscribe-container">
+          <div class="label" style="margin-bottom:8px;">Subscribe to the $200/mo retainer</div>
+          <div id="paypal-button-container-P-4YA041854N674115NNKYV3NI"></div>
+        </div>
       </div>
       <div class="price-includes">
         <h4>Every chatbot includes</h4>
@@ -621,6 +638,21 @@
   </div>
 </footer>
 
+<!--
+  Two separate PayPal apps are in play here (one for the one-time setup fee
+  hosted button, one for the $200/mo subscription button), so each SDK script
+  renders its own button the instant it loads, via onload — before the other
+  script has a chance to load in and take over the shared `paypal` global.
+-->
+<script
+  src="https://www.paypal.com/sdk/js?client-id=BAAAWg4yDbRjKux_SVVIwVzM4hUylXHO5VRJNs6Y6pNtGkA4ZrlgEWSpuH7RSzXQkmXa-faJqllykiHlOk&components=hosted-buttons&enable-funding=venmo&currency=USD"
+  onload="paypal.HostedButtons({ hostedButtonId: '3CMXVKJ2STEWW' }).render('#paypal-container-3CMXVKJ2STEWW');"
+></script>
+<script
+  src="https://www.paypal.com/sdk/js?client-id=BAA1sosrAsIdvN5CpB7m1m2k73AuefbXzqX9STHBHYFJwzARfMS65H8pUOe0wVo3nuGECqyyo7ewGicyQk&vault=true&intent=subscription"
+  data-sdk-integration-source="button-factory"
+  onload="paypal.Buttons({ style: { shape: 'pill', color: 'gold', layout: 'vertical', label: 'subscribe' }, createSubscription: function(data, actions){ return actions.subscription.create({ plan_id: 'P-4YA041854N674115NNKYV3NI' }); }, onApprove: function(data){ alert('Subscribed! Confirmation ID: ' + data.subscriptionID); } }).render('#paypal-button-container-P-4YA041854N674115NNKYV3NI');"
+></script>
 <script>
 (function(){
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -702,3 +734,5 @@
   }
 })();
 </script>
+
+</body></html>
